@@ -1,6 +1,8 @@
-name: CI
+name: Release
 
-on: [push]
+on:
+  release:
+    types: [created]
 
 env:
   CARGO_TERM_COLOR: always
@@ -32,8 +34,13 @@ jobs:
           mkdir -p ./r6/scripts
           cp -R ../reds/* ./r6/scripts
           cp ../target/release/*.dll ./red4ext/plugins/
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+          7z a -mx=9 -r ./mod.zip *
+      - name: Upload the archive
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: |
-            staging/**/*
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./staging/mod.zip
+          asset_name: sqlite4reds-${{ github.event.release.tag_name }}.zip
+          asset_content_type: application/zip
