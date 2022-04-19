@@ -6,7 +6,7 @@ use static_init::dynamic;
 define_plugin! {
     name: "sqlite4reds",
     author: "jekky",
-    version: 0:1:0,
+    version: 0:1:1,
     on_register: {
         register_function!("SQLite.AttachDb", attach_db);
         register_function!("SQLite.Query", run_query);
