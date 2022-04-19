@@ -4,7 +4,7 @@ Simple sqlite binding for redscript
 ## usage
 - import the library
   ```haskell
-  import SQLite
+  import SQLite.*
   ```
 - load your database
   ```swift
@@ -20,8 +20,8 @@ Simple sqlite binding for redscript
       AGE            INT     NOT NULL,
       ADDRESS        CHAR(50),
       SALARY         REAL
-    )"
-  );
+    )
+  ");
   // Success(Array([]))
   ```
 - insert a row
