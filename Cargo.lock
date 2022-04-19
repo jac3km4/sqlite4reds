@@ -214,7 +214,7 @@ dependencies = [
 [[package]]
 name = "red4ext-rs"
 version = "0.1.0"
-source = "git+https://github.com/jac3km4/red4ext-rs.git?rev=v0.1.13#b04806be07f0e5e5e627b36b8d893bcececf4746"
+source = "git+https://github.com/jac3km4/red4ext-rs.git?rev=v0.1.14#1a42cbc2da8a349fec398018759ef165edc86ee1"
 dependencies = [
  "array-init",
  "casey",

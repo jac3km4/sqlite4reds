@@ -55,7 +55,3 @@ public final class Error extends Result {
 public struct Row {
     public let columns: array<Variant>;
 }
-
-func IntCol(val: Int64) -> Variant = val;
-func FloatCol(val: Double) -> Variant = val;
-func StringCol(val: String) -> Variant = val;

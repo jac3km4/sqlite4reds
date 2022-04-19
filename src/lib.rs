@@ -58,38 +58,36 @@ fn do_query(query: &str, args: &[Variant]) -> Result<REDArray<Row>, sqlite::Erro
 
     let mut rows = vec![];
     while let Some(row) = cur.next()? {
-        let cols = row.iter().map(|val| match val {
-            Value::Integer(int) => {
-                call!("SQLite.IntCol;Int64" (*int) -> Variant)
-            }
-            Value::Float(num) => {
-                call!("SQLite.FloatCol;Double" (*num) -> Variant)
-            }
-            Value::String(str) => {
-                call!("SQLite.StringCol;String" (str.as_str()) -> Variant)
-            }
-            _ => unreachable!(),
-        });
-
-        rows.push(Row {
-            cols: REDArray::from_sized_iter(cols),
-        })
+        let cols = REDArray::from_sized_iter(row.iter().map(encode_value));
+        rows.push(Row { cols })
     }
 
     Ok(REDArray::from_sized_iter(rows.into_iter()))
 }
 
 fn decode_value(variant: &Variant) -> Value {
-    match rtti::get_type_name(variant.get_type()) {
-        prims::INT32 => Value::Integer(unsafe { *(variant.get_data() as *const i32) as i64 }),
-        prims::INT64 => Value::Integer(unsafe { *(variant.get_data() as *const i64) }),
-        prims::UINT32 => Value::Integer(unsafe { *(variant.get_data() as *const i64) }),
-        prims::FLOAT => Value::Float(unsafe { *(variant.get_data() as *const f32) as f64 }),
-        prims::DOUBLE => Value::Float(unsafe { *(variant.get_data() as *const f64) }),
-        prims::STRING => {
-            let str = unsafe { *(variant.get_data() as *const REDString) };
-            Value::String(FromRED::from_repr(str))
-        }
+    if let Some(val) = variant.try_get::<i32>() {
+        Value::Integer(val.into())
+    } else if let Some(val) = variant.try_get::<i64>() {
+        Value::Integer(val)
+    } else if let Some(val) = variant.try_get::<u32>() {
+        Value::Integer(val.into())
+    } else if let Some(val) = variant.try_get::<f32>() {
+        Value::Float(val.into())
+    } else if let Some(val) = variant.try_get::<f64>() {
+        Value::Float(val)
+    } else if let Some(val) = variant.try_get::<String>() {
+        Value::String(val)
+    } else {
+        unreachable!()
+    }
+}
+
+fn encode_value(value: &Value) -> Variant {
+    match value {
+        Value::Integer(int) => Variant::new(*int),
+        Value::Float(num) => Variant::new(*num),
+        Value::String(str) => Variant::new(str.as_str()),
         _ => unreachable!(),
     }
 }
@@ -102,15 +100,4 @@ struct Row {
 
 impl IsoRED for Row {
     const NAME: &'static str = "SQLite.Row";
-}
-
-mod prims {
-    use red4ext_rs::interop::CName;
-
-    pub const INT32: CName = CName::new("Int32");
-    pub const INT64: CName = CName::new("Int64");
-    pub const UINT32: CName = CName::new("Uint32");
-    pub const FLOAT: CName = CName::new("Float");
-    pub const DOUBLE: CName = CName::new("Double");
-    pub const STRING: CName = CName::new("String");
 }
