@@ -53,6 +53,36 @@ Simple sqlite binding for redscript
   }
   ```
 
+## SQLite types
+
+<table>
+  <tr>
+    <th>SQLite type</th>
+    <th>Redscript input types (in queries)</th>
+    <th>Redscript output type (in result columns)</th>
+  </tr>
+  <tr>
+    <td>INTEGER</td>
+    <td>Int32, Int64, Uint32</td>
+    <td>Int64</td>
+  </tr>
+  <tr>
+    <td>REAL</td>
+    <td>Float, Double</td>
+    <td>Double</td>
+  </tr>
+  <tr>
+    <td>TEXT</td>
+    <td>String</td>
+    <td>String</td>
+  </tr>
+  <tr>
+    <td>BLOB</td>
+    <td>Unavailable</td>
+    <td>Unavailable</td>
+  </tr>
+</table>
+
 ## requirements
 - [RED4ext](https://github.com/jac3km4/redscript)
 - [redscript](https://github.com/WopsS/RED4ext.SDK)
