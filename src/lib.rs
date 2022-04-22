@@ -79,7 +79,7 @@ fn decode_value(variant: &Variant) -> Value {
     } else if let Some(val) = variant.try_get::<String>() {
         Value::String(val)
     } else {
-        unreachable!()
+        unimplemented!()
     }
 }
 
@@ -88,7 +88,10 @@ fn encode_value(value: &Value) -> Variant {
         Value::Integer(int) => Variant::new(*int),
         Value::Float(num) => Variant::new(*num),
         Value::String(str) => Variant::new(str.as_str()),
-        _ => unreachable!(),
+        Value::Null => Variant::undefined(),
+        _ => {
+            unimplemented!()
+        }
     }
 }
 
@@ -98,6 +101,8 @@ struct Row {
     cols: REDArray<Variant>,
 }
 
-impl IsoRED for Row {
+impl NativeRED for Row {
     const NAME: &'static str = "SQLite.Row";
 }
+
+impl IsoRED for Row {}

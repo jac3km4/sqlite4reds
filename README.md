@@ -39,6 +39,8 @@ Simple sqlite binding for redscript
     for row in (res as Success).GetRows() {
         let name = FromVariant<String>(row.columns[1]);
         let age = FromVariant<Int64>(row.columns[2]);
+        // nullables can be checked using IsDefined
+        let has_address = IsDefined(row.columns[3]);
         ...
       }
   }
@@ -78,8 +80,8 @@ Simple sqlite binding for redscript
   </tr>
   <tr>
     <td>BLOB</td>
-    <td>Unavailable</td>
-    <td>Unavailable</td>
+    <td>Not supported</td>
+    <td>Not supported</td>
   </tr>
 </table>
 
